@@ -1,0 +1,7 @@
+<h1>id: <%= @task.id %> の課題詳細ページ</h1>
+
+<p> <%= @task.content  %></p>
+
+<%= link_to '一覧に戻る', tasks_path %>
+<%= link_to 'この課題を編集する', edit_task_path(@task) %>
+<p><%= link_to '課題の削除をする', @task, method: :delete, data: { confirm: '本当に削除しますか?'} %> </p>
