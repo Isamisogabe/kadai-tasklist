@@ -1,5 +1,7 @@
 class TasksController < ApplicationController
+  before_action :require_user_logged_in
   before_action :set_task, only: [:show, :update, :destroy, :edit]
+    
   def index
     @tasks = Task.all.page(params[:page]).per(5)
   end
@@ -12,7 +14,8 @@ class TasksController < ApplicationController
   end
   
   def create
-    @task = Task.new(task_params)
+    @task = current_user.tasks.build(task_params)
+    
     
     if(@task.save)
       flash[:success] = '課題の生成成功！'
@@ -30,7 +33,7 @@ class TasksController < ApplicationController
       redirect_to @task
     else
       flash.now[:danger] = '課題が更新されませんでした'
-      render :edit
+      render 'edit_task_path'
       
     end
   end
@@ -42,17 +45,17 @@ class TasksController < ApplicationController
     @task.destroy
     
     flash[:success] = '課題は正常に削除されました！'
-    redirect_to tasks_url
+    redirect_to root_url
   end
   
   private
   
   #strong parameter
   def task_params
-    params.require(:task).permit(:content, :status)
+    params.require(:task).permit(:content, :status, :user_id)
   end
   
   def set_task
-    @task = Task.find(params[:id])
+    @task = current_user.tasks.find(params[:id])
   end
 end

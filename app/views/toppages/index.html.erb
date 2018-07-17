@@ -1,5 +1,37 @@
-<div class="center jumbotron">
-  <div class="text-center">
-    <h1>Welcome to tasklist!</h1>
+<% if logged_in? %>
+  <h1>自分がやるべきタスク一覧</h1>
+
+  <% if @tasks.any? %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>id</th>
+          <th>課題内容</th>
+          <th>状態</th>
+        </tr>
+      </thead>
+  
+      <tbody>
+        <% @tasks.each do |task| %>
+          <tr>
+            <td> <%= link_to task.id , task %></td>
+            <td> <%= task.content %> </td>
+            <td> <%= task.status %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div>
+        <%= paginate @tasks %>
+    </div>
+  <% end %>
+  <%= link_to '新しい課題の生成', new_task_path , class: "btn btn-primary" %>
+  <p>ログインに完了ユーザ:<%= current_user.name %></p>
+<% else %>
+  <div class="center jumbotron">
+    <div class="text-center">
+      <h1>Welcome to tasklist!</h1>
+      <%= link_to 'Sign up now!', signup_path, class: 'btn btn-lg btn-primary' %>
+    </div>
   </div>
-</div>
+<% end %>
